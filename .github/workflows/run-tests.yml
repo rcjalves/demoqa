@@ -1,12 +1,11 @@
 name: Run Tests DemoQA
 
-# 🔄 Triggers: roda em push, PR e manual
 on:
   push:
-    branches: [ main ]   # ou troque para o nome do seu branch principal
+    branches: [ master ]
   pull_request:
-    branches: [ main ]
-  workflow_dispatch:      # permite execução manual via GitHub
+    branches: [ master ]
+  workflow_dispatch:
 
 jobs:
   test:
@@ -21,4 +20,19 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'   # ou
+          java-version: '17'
+
+      - name: ⚙️ Instalar Maven
+        uses: stCarolas/setup-maven@v4
+        with:
+          maven-version: '3.8.5'
+
+      - name: 🧪 Executar testes com Maven
+        run: mvn clean test
+
+      - name: 📦 Enviar relatório HTML do Cucumber
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: cucumber-report
+          path: target/cucumber-report.html

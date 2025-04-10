@@ -45,5 +45,15 @@
 		</dependency>
 	</dependencies>
 
+<build>
+  <plugins>
+    <plugin>
+      <groupId>net.masterthought</groupId>
+      <artifactId>maven-cucumber-reporting</artifactId>
+      <version>5.7.0</version>
+    </plugin>
+  </plugins>
+</build>
+
 
 </project>
