@@ -1,4 +1,4 @@
-name: Run Tests DemoQA
+name: Run Tests DemoQA (sem Maven)
 
 on:
   push:
@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Executar testes automatizados (sem Maven)
+    name: Compilar e executar testes (sem Maven direto)
     runs-on: ubuntu-latest
 
     steps:
@@ -22,23 +22,21 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: 📦 Instalar dependências com Ivy (ou outro gerenciador, opcional)
-        run: |
-          echo "Se quiser, pode baixar as libs manualmente aqui ou usar Ivy/Gradle"
+      - name: 📥 Baixar dependências com Maven
+        run: mvn dependency:copy-dependencies -DoutputDirectory=libs
 
-      - name: 🔨 Compilar arquivos Java
+      - name: 🛠️ Compilar arquivos .java
         run: |
           mkdir -p target/classes
-          javac -cp "libs/*" -d target/classes $(find src/main/java src/test/java -name "*.java")
+          javac -cp "libs/*" -d target/classes $(find src/test/java src/main/java -name "*.java")
 
-      - name: 🧪 Executar testes (JUnit/Cucumber)
+      - name: 🚀 Executar Testes com JUnit
         run: |
-          java -cp "libs/*:target/classes" org.junit.runner.JUnitCore path.to.seu.Runner
-          # exemplo: java -cp "libs/*:target/classes" runners.RunnerTest
+          java -cp "libs/*:target/classes" org.junit.runner.JUnitCore runner.TestRunners
 
       - name: 📦 Enviar relatório HTML do Cucumber
         if: always()
-        uses: actions/upload-artifact@v4.6.2
+        uses: actions/upload-artifact@v4
         with:
           name: cucumber-report
           path: |
