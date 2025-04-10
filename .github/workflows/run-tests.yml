@@ -9,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Executar testes automatizados
+    name: Executar testes automatizados (sem Maven)
     runs-on: ubuntu-latest
 
     steps:
@@ -22,13 +22,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: ⚙️ Instalar Maven
-        uses: stCarolas/setup-maven@v4
-        with:
-          maven-version: '3.8.5'
+      - name: 📦 Instalar dependências com Ivy (ou outro gerenciador, opcional)
+        run: |
+          echo "Se quiser, pode baixar as libs manualmente aqui ou usar Ivy/Gradle"
 
-      - name: 🧪 Executar testes com Maven
-        run: mvn clean test
+      - name: 🔨 Compilar arquivos Java
+        run: |
+          mkdir -p target/classes
+          javac -cp "libs/*" -d target/classes $(find src/main/java src/test/java -name "*.java")
+
+      - name: 🧪 Executar testes (JUnit/Cucumber)
+        run: |
+          java -cp "libs/*:target/classes" org.junit.runner.JUnitCore path.to.seu.Runner
+          # exemplo: java -cp "libs/*:target/classes" runners.RunnerTest
 
       - name: 📦 Enviar relatório HTML do Cucumber
         if: always()
@@ -38,5 +44,3 @@ jobs:
           path: |
             target/cucumber-report.html
             target/cucumber-report/
-
-
