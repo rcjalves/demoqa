@@ -1,32 +1,24 @@
-name: Run Cucumber Tests
+name: Run Tests DemoQA
 
+# 🔄 Triggers: roda em push, PR e manual
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]   # ou troque para o nome do seu branch principal
   pull_request:
-    branches:
-      - main
+    branches: [ main ]
+  workflow_dispatch:      # permite execução manual via GitHub
 
 jobs:
   test:
+    name: Executar testes automatizados
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout código
+      - name: ⬇️ Clonar repositório
         uses: actions/checkout@v3
 
-      - name: Configurar JDK 17
+      - name: ☕ Instalar Java
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
-          java-version: '17'
-
-      - name: Rodar testes com Maven
-        run: mvn test
-
-      - name: Publicar Relatório HTML do Cucumber
-        uses: actions/upload-artifact@v3
-        with:
-          name: cucumber-report
-          path: target/report.html
+          java-version: '17'   # ou
