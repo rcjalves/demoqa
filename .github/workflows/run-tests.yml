@@ -1,6 +1,5 @@
 name: Run Tests DemoQA
 
-# 🔄 Triggers: roda em push, PR e manual
 on:
   push:
     branches: [ master ]
@@ -10,7 +9,7 @@ on:
 
 jobs:
   test:
-    name: Gerar Relatório de Testes
+    name: Executar testes automatizados
     runs-on: ubuntu-latest
 
     steps:
@@ -23,9 +22,19 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: ⚙️ Instalar Maven
+        uses: stCarolas/setup-maven@v4
+        with:
+          maven-version: '3.8.5'
+
+      - name: 🧪 Executar testes com Maven
+        run: mvn clean test
+
       - name: 📦 Enviar relatório HTML do Cucumber
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v3.1.3
         with:
           name: cucumber-report
-          path: target/cucumber-report.html
+          path: |
+            target/cucumber-report.html
+            target/cucumber-report/
